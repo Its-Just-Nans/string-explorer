@@ -7,7 +7,7 @@
 
 <div>
     <label for="regex">Use Regex</label>
-    <input type="checkbox" id="regex" bind:value={useRegex} />
+    <input type="checkbox" id="regex" bind:checked={useRegex} />
     <textarea placeholder="Text to replace" bind:value={toReplace}></textarea>
     <textarea placeholder="Replacement" bind:value={replacement}></textarea>
     <button

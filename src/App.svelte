@@ -1,6 +1,7 @@
 <script lang="ts">
     import { myString, history } from "./lib/stores";
     import Replacer from "./lib/Replacer.svelte";
+    import Converter from "./lib/Converter.svelte";
 </script>
 
 <main>
@@ -24,4 +25,5 @@
         }}>CTRL Z</button
     >
     <Replacer />
+    <Converter />
 </main>
