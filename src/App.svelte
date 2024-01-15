@@ -1,17 +1,11 @@
 <script lang="ts">
     import { myString, history } from "./lib/stores";
-    import Replacer from "./lib/Replacer.svelte";
+
     import Converter from "./lib/Converter.svelte";
+    import EditorChoice from "./lib/EditorChoice.svelte";
 </script>
 
 <main>
-    <textarea
-        bind:value={$myString}
-        on:input={() => {
-            $history.push($myString);
-        }}
-    ></textarea>
-
     <br />
     <button
         on:click={() => {
@@ -24,6 +18,12 @@
             }
         }}>CTRL Z</button
     >
-    <Replacer />
+    <EditorChoice />
     <Converter />
 </main>
+
+<style>
+    :global(body) {
+        margin: 0px;
+    }
+</style>

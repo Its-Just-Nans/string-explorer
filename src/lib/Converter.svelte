@@ -1,5 +1,7 @@
 <script lang="ts">
-    import { myString } from "./stores";
+    import { onMount } from "svelte";
+    import SpanConverter from "./SpanConverter.svelte";
+    import { myString, optionsConverter } from "./stores";
 
     let converted = "";
     let base = 2;
@@ -17,44 +19,44 @@
                 return "0x";
         }
     };
+
+    let elements: SpanConverter[] = [];
+
     const convert = (toConvert: string) => {
-        let newValue = "";
-        const padding = base === 2 ? 8 : base === 8 ? 3 : base === 10 ? 3 : 2;
-        const prefix = addPrefix ? getPrefix() : "";
-        const spacing = addSpace ? " " : "";
+        elements.forEach((element) => {
+            element.$destroy();
+        });
+        elements = [];
+        $optionsConverter.base = base;
+        $optionsConverter.padding = base === 2 ? 8 : base === 8 ? 3 : base === 10 ? 3 : 2;
+        $optionsConverter.prefix = addPrefix ? getPrefix() : "";
+        $optionsConverter.spacing = addSpace ? " " : "";
+        const target = document.querySelector("#containerConverted div");
+        if (!target) return;
         for (var i = 0; i < toConvert.length; i++) {
             const codePoint = toConvert[i].codePointAt(0);
             if (codePoint) {
-                let tempNum = codePoint;
-                // TODO loop through codePoint and convert to base
-                if (codePoint < 128) {
-                    newValue += prefix + codePoint.toString(base).padStart(padding, "0");
-                } else if (codePoint < 2048) {
-                    const code = codePoint.toString(base).padStart(padding * 2, "0");
-                    const byte1 = code.substring(0, 8);
-                    const byte2 = code.substring(8, 16);
-                    newValue += `${prefix}${byte1}${spacing}${prefix}${byte2}`;
-                } else if (codePoint < 2048) {
-                } else {
-                    const code = codePoint.toString(base).padStart(padding * 4, "0");
-                    const byte1 = code.substring(0, 8);
-                    const byte2 = code.substring(8, 16);
-                    const byte3 = code.substring(16, 24);
-                    const byte4 = code.substring(24, 32);
-                    newValue += `${byte1}${spacing}${byte2}${spacing}${byte3}${spacing}${byte4}`;
-                }
+                const element = new SpanConverter({
+                    target,
+                    props: {
+                        codePoint,
+                    },
+                });
+                elements.push(element);
             }
-            newValue += `${spacing}`;
         }
-        converted = newValue;
+        elements = elements;
     };
-
-    myString.subscribe((currentStr) => {
-        convert(currentStr);
+    onMount(() => {
+        myString.subscribe((currentStr) => {
+            convert(currentStr);
+        });
     });
 </script>
 
-<textarea bind:value={converted} />
+<div id="containerConverted">
+    <div></div>
+</div>
 
 <br />
 
@@ -86,3 +88,15 @@
         convert($myString);
     }}
 />
+
+<style>
+    #containerConverted {
+        flex-grow: 1;
+        height: 80%;
+        width: 100%;
+    }
+    #containerConverted div {
+        width: 99%;
+        height: 100%;
+    }
+</style>
