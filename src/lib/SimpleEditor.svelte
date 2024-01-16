@@ -11,6 +11,16 @@
         }}
     ></textarea>
 </div>
+<button
+    on:click={() => {
+        const last = $history.pop(); // current
+        if (typeof last !== "undefined") {
+            $myString = last;
+        } else {
+            $myString = "";
+        }
+    }}>CTRL Z</button
+>
 <Replacer />
 
 <style>

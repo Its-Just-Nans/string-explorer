@@ -1,6 +1,6 @@
 <script lang="ts">
     import { getByteOfCodePoint, getColorOfCodePoint } from "./lib";
-    import { optionsConverter } from "./stores";
+    import { optionsConverter, codePointStore } from "./stores";
 
     export let codePoint = 0;
     const bytes = getByteOfCodePoint(codePoint);
@@ -16,25 +16,18 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-mouse-events-have-key-events -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <span
-    data-html="true"
-    data-tooltip={`
-    string: ${String.fromCodePoint(codePoint)}
+    class="text-span"
+    data-tooltip={`string: ${String.fromCodePoint(codePoint)}
     decimal: ${codePoint}
     binary: ${codePoint.toString(2).padStart(8, "0")}
     hex: ${codePoint.toString(16).toUpperCase().padStart(2, "0")}`}
     style={`background-color:${getColorOfCodePoint(codePoint)}`}
-    on:mouseenter={() => {
-        show = true;
-    }}
-    on:mouseleave={() => {
-        show = false;
-    }}
-    on:mouseout={() => {
-        show = false;
+    on:click={() => {
+        $codePointStore = codePoint;
     }}>{value}</span
 >
-
 <svelte:head>
     <style>
         /*This would all go into the global.css file*/
@@ -102,3 +95,9 @@
         }
     </style>
 </svelte:head>
+
+<style>
+    .text-span {
+        cursor: pointer;
+    }
+</style>

@@ -5,7 +5,7 @@
     import cssWorker from "monaco-editor/esm/vs/language/css/css.worker?worker";
     import htmlWorker from "monaco-editor/esm/vs/language/html/html.worker?worker";
     import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
-    import { myString } from "./stores";
+    import { codePointStore, myString } from "./stores";
 
     let divEl;
     let editor;
@@ -33,6 +33,17 @@
         editor = Monaco.editor.create(divEl, {
             value: $myString,
             theme: "vs-dark",
+        });
+        codePointStore.subscribe((value) => {
+            if (value) {
+                const model = editor.getModel();
+                const str = String.fromCodePoint(value);
+                const range = model.findMatches(str);
+                if (range) {
+                    editor.setSelection(range[0].range);
+                    editor.getAction("actions.find").run();
+                }
+            }
         });
         editor.onDidChangeModelContent(() => {
             const text = editor.getValue();

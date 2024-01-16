@@ -22,3 +22,4 @@ Linguistics and dictionaries:
 export const myString = writable(defaultString);
 export const history = writable<string[]>([]);
 export const optionsConverter = writable({});
+export const codePointStore = writable(null);
