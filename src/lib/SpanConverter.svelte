@@ -5,7 +5,6 @@
     export let codePoint = 0;
     const bytes = getByteOfCodePoint(codePoint);
     let value = "";
-    console.log(bytes);
     for (const oneByte of bytes) {
         value += `${$optionsConverter.prefix}${oneByte
             .toString($optionsConverter.base)
